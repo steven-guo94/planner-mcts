@@ -42,3 +42,14 @@ py_test(
   data = ['//python:planner_uct.so'],
   imports = ['../python/'],
 )
+
+py_test(
+  name = "pickle_unpickle_test",
+  srcs = ["pickle_unpickle_test.py"],
+  data = ['@bark_project//python:bark.so'],
+  imports = ['../python/'],
+  deps=[
+    "@bark_project//modules/runtime:runtime",
+  ]
+)
+
