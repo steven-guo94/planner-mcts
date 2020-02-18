@@ -14,9 +14,9 @@ namespace models {
 namespace behavior {
 
 using modules::models::behavior::primitives::Primitive;
-using modules::models::behavior::primitives::PrimitiveConstAcceleration;
-using modules::models::behavior::primitives::PrimitiveChangeToLeft;
-using modules::models::behavior::primitives::PrimitiveChangeToRight;
+using modules::models::behavior::primitives::PrimitiveConstAccChangeToLeft;
+using modules::models::behavior::primitives::PrimitiveConstAccChangeToRight;
+using modules::models::behavior::primitives::PrimitiveConstAccStayLane;
 using modules::models::dynamic::Input;
 using modules::models::dynamic::SingleTrackModel;
 using modules::world::prediction::PredictionSettings;
@@ -29,24 +29,26 @@ PredictionSettings BehaviorUCTSingleAgentMacroActions::SetupPredictionSettings(
   BehaviorModelPtr ego_prediction_model(
       new BehaviorMPMacroActions(dyn_model, prediction_params_ego));
 
+  float cte = params->GetReal("BehaviorUctSingleAgent::CrossTrackError",
+                              "Parameter for lat control", 1);
+  std::vector<float> acc_vec =
+      params->GetListFloat("BehaviorUctSingleAgent::AccelerationInputs",
+                           "A list of acceleration ", {0, 1, 4, -1, -8});
+
   std::vector<std::shared_ptr<Primitive>> prim_vec;
 
-  //! TODO: Move Parameters to parm server
-  float cte = 0.1; // cross track error
-  std::vector<float> acc_vec{0, 1, -1};
-
   for (auto& acc : acc_vec) {
-    auto primitive =
-        std::make_shared<PrimitiveConstAcceleration>(prediction_params_ego, dyn_model, acc, cte);
+    auto primitive = std::make_shared<PrimitiveConstAccStayLane>(
+        prediction_params_ego, dyn_model, acc, cte);
     prim_vec.push_back(primitive);
   }
 
-  auto primitive_left =
-      std::make_shared<PrimitiveChangeToLeft>(prediction_params_ego, dyn_model, cte);
+  auto primitive_left = std::make_shared<PrimitiveConstAccChangeToLeft>(
+      prediction_params_ego, dyn_model, cte);
   prim_vec.push_back(primitive_left);
 
-  auto primitive_right =
-      std::make_shared<PrimitiveChangeToRight>(prediction_params_ego, dyn_model, cte);
+  auto primitive_right = std::make_shared<PrimitiveConstAccChangeToRight>(
+      prediction_params_ego, dyn_model, cte);
   prim_vec.push_back(primitive_right);
 
   for (auto& p : prim_vec) {
@@ -55,7 +57,8 @@ PredictionSettings BehaviorUCTSingleAgentMacroActions::SetupPredictionSettings(
             ->AddMotionPrimitive(p);
   }
   auto prediction_params_other = params->AddChild("OtherVehicles");
-  BehaviorModelPtr others_prediction_model(new BehaviorIDMClassic(prediction_params_other));
+  BehaviorModelPtr others_prediction_model(
+      new BehaviorIDMClassic(prediction_params_other));
   return PredictionSettings(ego_prediction_model, others_prediction_model);
 }
 
