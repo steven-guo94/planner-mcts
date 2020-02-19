@@ -37,7 +37,7 @@ BehaviorUCTSingleAgentBase::BehaviorUCTSingleAgentBase(
           "If true, tree is dumped to dot file after planning", false)),
         prediction_time_span_(GetParams()->AddChild("BehaviorUctSingleAgent")
                                         ->AddChild("PredictionSettings")
-                                        ->GetBool("TimeSpan",
+                                        ->GetReal("TimeSpan",
           "Time in seconds agents are predicted ahead in each expansion and rollout step", 0.5f)) {}
 
 dynamic::Trajectory BehaviorUCTSingleAgentBase::Plan(
