@@ -11,7 +11,7 @@ def planner_uct_rules_dependencies():
     _maybe(
     git_repository,
     name = "bark_project",
-    commit="af42d9b59cb39d9db6b44ab3e3db3620ea671f8d",
+    commit="f6167ba0f413ebf35cb983c6b3e6f9db14cee078",
     remote = "https://github.com/bark-simulator/bark",
     )
 

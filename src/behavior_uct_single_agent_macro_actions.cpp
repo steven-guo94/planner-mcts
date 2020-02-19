@@ -29,10 +29,9 @@ PredictionSettings BehaviorUCTSingleAgentMacroActions::SetupPredictionSettings(
   BehaviorModelPtr ego_prediction_model(
       new BehaviorMPMacroActions(dyn_model, prediction_params_ego));
 
-  float cte = params->GetReal("BehaviorUctSingleAgent::CrossTrackError",
+  float cte = prediction_params_ego->GetReal("CrossTrackError",
                               "Parameter for lat control", 1);
-  std::vector<float> acc_vec =
-      params->GetListFloat("BehaviorUctSingleAgent::AccelerationInputs",
+  std::vector<float> acc_vec = prediction_params_ego->GetListFloat("AccelerationInputs",
                            "A list of acceleration ", {0, 1, 4, -1, -8});
 
   std::vector<std::shared_ptr<Primitive>> prim_vec;
