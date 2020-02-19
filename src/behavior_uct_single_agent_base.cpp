@@ -34,7 +34,11 @@ BehaviorUCTSingleAgentBase::BehaviorUCTSingleAgentBase(
           GetParams()->AddChild("BehaviorUctSingleAgent"))),
       dump_tree_(GetParams()->AddChild("BehaviorUctSingleAgent")->GetBool(
           "DumpTree",
-          "If true, tree is dumped to dot file after planning", false)) {}
+          "If true, tree is dumped to dot file after planning", false)),
+        prediction_time_span_(GetParams()->AddChild("BehaviorUctSingleAgent")
+                                        ->AddChild("PredictionSettings")
+                                        ->GetBool("TimeSpan",
+          "Time in seconds agents are predicted ahead in each expansion and rollout step", 0.5f)) {}
 
 dynamic::Trajectory BehaviorUCTSingleAgentBase::Plan(
     float delta_time, const world::ObservedWorld& observed_world) {
@@ -65,7 +69,7 @@ dynamic::Trajectory BehaviorUCTSingleAgentBase::Plan(
     mcts.printTreeToDotFile(filename.str());
   }
 
-  LOG(INFO) << "BehaviorUCTSingleAgent, iterations: " << mcts.numIterations()
+  VLOG(1) << "BehaviorUCTSingleAgent, iterations: " << mcts.numIterations()
             << ", search time " << mcts.searchTime()
             << ", best action: " << best_action;
 

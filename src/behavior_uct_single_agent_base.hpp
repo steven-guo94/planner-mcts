@@ -35,6 +35,7 @@ class BehaviorUCTSingleAgentBase : public BehaviorModel {
 
  protected:
   modules::world::prediction::PredictionSettings prediction_settings_;
+  double prediction_time_span_;
   bool dump_tree_;
 
   // MCTS PARAMETERS
