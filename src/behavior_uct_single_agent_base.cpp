@@ -58,7 +58,7 @@ dynamic::Trajectory BehaviorUCTSingleAgentBase::Plan(
       std::const_pointer_cast<ObservedWorld>(mcts_observed_world);
   BehaviorMotionPrimitives::MotionIdx num =
       ego_model->GetNumMotionPrimitives(const_mcts_observed_world);
-  MctsStateSingleAgent mcts_state(mcts_observed_world, false, num, delta_time);
+  MctsStateSingleAgent mcts_state(mcts_observed_world, false, num, prediction_time_span_);
   mcts.search(mcts_state);
   mcts::ActionIdx best_action = mcts.returnBestAction();
   SetLastAction(DiscreteAction(best_action));
