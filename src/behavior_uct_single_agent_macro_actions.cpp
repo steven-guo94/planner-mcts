@@ -53,7 +53,7 @@ PredictionSettings BehaviorUCTSingleAgentMacroActions::SetupPredictionSettings(
 
   auto primitive_gap_keeping = std::make_shared<PrimitiveGapKeeping>(
       prediction_params_ego, dyn_model);
-  prim_vec.push_back(primitive_right);
+  prim_vec.push_back(primitive_gap_keeping);
 
   for (auto& p : prim_vec) {
     auto idx =
