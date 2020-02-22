@@ -17,6 +17,7 @@ using modules::models::behavior::primitives::Primitive;
 using modules::models::behavior::primitives::PrimitiveConstAccChangeToLeft;
 using modules::models::behavior::primitives::PrimitiveConstAccChangeToRight;
 using modules::models::behavior::primitives::PrimitiveConstAccStayLane;
+using modules::models::behavior::primitives::PrimitiveGapKeeping;
 using modules::models::dynamic::Input;
 using modules::models::dynamic::SingleTrackModel;
 using modules::world::prediction::PredictionSettings;
@@ -48,6 +49,10 @@ PredictionSettings BehaviorUCTSingleAgentMacroActions::SetupPredictionSettings(
 
   auto primitive_right = std::make_shared<PrimitiveConstAccChangeToRight>(
       prediction_params_ego, dyn_model, cte);
+  prim_vec.push_back(primitive_right);
+
+  auto primitive_gap_keeping = std::make_shared<PrimitiveGapKeeping>(
+      prediction_params_ego, dyn_model);
   prim_vec.push_back(primitive_right);
 
   for (auto& p : prim_vec) {
