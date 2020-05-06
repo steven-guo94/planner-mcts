@@ -95,6 +95,11 @@ const std::vector<mcts::AgentIdx> MctsStateSingleAgent::get_agent_idx() const {
   return std::vector<mcts::AgentIdx>{0};
 }
 
+float MctsStateSingleAgent::get_distance_to_goal() const {
+  mcts::AgentIdx ego_idx = mcts::StateInterface<MctsStateSingleAgent>::get_ego_agent_idx()
+
+}
+
 std::string MctsStateSingleAgent::sprintf() const { return std::string(); }
 
 }  // namespace behavior

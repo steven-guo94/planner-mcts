@@ -35,12 +35,16 @@ BehaviorUCTSingleAgentBase::BehaviorUCTSingleAgentBase(
       dump_tree_(GetParams()->AddChild("BehaviorUctSingleAgent")->GetBool(
           "DumpTree",
           "If true, tree is dumped to dot file after planning", false)),
+      random_heuristic_(GetParams()->AddChild("BehaviorUctSingleAgent")->GetBool(
+          "randomheuristic",
+          "If true, use random heuristic", false)),
         prediction_time_span_(GetParams()->AddChild("BehaviorUctSingleAgent")
                                         ->AddChild("PredictionSettings")
                                         ->GetReal("TimeSpan",
           "Time in seconds agents are predicted ahead in each expansion and rollout step", 0.5f)) {}
 
-dynamic::Trajectory BehaviorUCTSingleAgentBase::Plan(
+dynamic::
+ BehaviorUCTSingleAgentBase::Plan(
     float delta_time, const world::ObservedWorld& observed_world) {
   ObservedWorldPtr mcts_observed_world =
       std::dynamic_pointer_cast<ObservedWorld>(observed_world.Clone());
@@ -49,6 +53,11 @@ dynamic::Trajectory BehaviorUCTSingleAgentBase::Plan(
   mcts::Mcts<MctsStateSingleAgent, mcts::UctStatistic, mcts::UctStatistic,
              mcts::RandomHeuristic>
       mcts(mcts_parameters_);
+      //create a object named mcts, template class
+  if(!random_heuristic_){
+      mcts = Mcts<MctsStateSingleAgent, mcts::UctStatistic, mcts::UctStatistic,
+             mcts::DomainHeuristic>(mcts_parameters_);
+  }
 
   std::shared_ptr<BehaviorMotionPrimitives> ego_model =
       std::dynamic_pointer_cast<BehaviorMotionPrimitives>(

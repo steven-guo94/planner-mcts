@@ -42,6 +42,8 @@ class MctsStateSingleAgent : public mcts::StateInterface<MctsStateSingleAgent> {
 
   std::string sprintf() const;
 
+  float get_distance_to_goal() const;
+
  private:
   const std::shared_ptr<const modules::world::ObservedWorld> observed_world_;
   const bool is_terminal_state_;
